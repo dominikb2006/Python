@@ -1,0 +1,182 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+def choose_xo():
+    p1_symbol=''
+    print ('Welcome to Tic Tac Toe!\n\nPlayer 1: Do you want to be X or O?')
+    while p1_symbol not in ('X','O'):
+        p1_symbol=input()
+        p1_symbol=p1_symbol.upper()
+        if p1_symbol in ('X','O'):
+            clear_output()
+            break
+        else:
+            clear_output()
+            print("It's not correct symbol. Choose X or O.")
+    
+    
+    if p1_symbol=='X':
+        p2_symbol= 'O'
+    else:
+        p2_symbol= 'X'
+        
+    return (p1_symbol,p2_symbol)
+
+
+# In[2]:
+
+
+def are_you_ready():
+    ready=''
+    p='1'
+    print('Player {} will go first.\n\nAre you ready to play? Enter Yes or No.'.format(p))
+    
+    while ready not in ('y','yes'):
+        ready=input()
+        ready=ready.lower()
+        if ready in ('y','yes'):
+            clear_output()
+            break 
+        elif ready in ('n','no'):
+            clear_output()
+            print("When you will be ready enter Yes.")     
+            
+        else:
+            clear_output()
+            print("It's not correct word. Enter Yes or No.")
+
+
+# In[3]:
+
+
+def end():
+    print('Do you want to play again? Enter Yes or No:')
+    play_again=''
+    while play_again not in ('y','yes'):
+        play_again=input()
+        play_again=play_again.lower()
+        if play_again in ('y','yes'):
+            return (True)
+        elif play_again in ('n','no'):
+            return (False)
+        else:
+            clear_output()
+            print("It's not correct word. Enter Yes or No.")
+
+
+# In[4]:
+
+
+def display_board(board):
+    board=[' '  if x=='' else x for x in board]
+    dic={1:' '+board[7]+' | '+board[8]+' | '+board[9],
+         2:'---|---|---',
+         3:' '+board[4]+' | '+board[5]+' | '+board[6],
+         4:'---|---|---',
+         5:' '+board[1]+' | '+board[2]+' | '+board[3],}
+    for _ in dic:
+        print(dic[_])
+
+
+# In[5]:
+
+
+def player_turn(lst,tmpboard,p_symbol,player):
+    rng=['1','2','3','4','5','6','7','8','9']
+    win_list=[[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]]
+    
+    clear_output()
+    display_board(tmpboard)
+    
+    print('Choose your next position ({} - {}): (1-9)'.format(player,p_symbol))
+    p_position=input()
+    again = False
+    end_match = False
+    
+    while p_position not in rng or int(p_position) in lst:
+        clear_output()
+        display_board(tmpboard)
+        print('Choose properly your next position ({} - {}): (1-9)'.format(player,p_symbol))
+        p_position=input()
+        
+    lst.append(int(p_position))
+    tmpboard[int(p_position)]=p_symbol
+        
+    board_number=set([i for i, v in enumerate(tmpboard) if v == p_symbol])
+    for _ in range(0,len(win_list)):
+        if set(win_list[_]).issubset(board_number) == True:
+            clear_output()
+            display_board(tmpboard)                
+            print('Congratulations! {} won the game!'.format(player))
+            end_match=True
+            again=end()
+            clear_output()
+    return (lst, again, end_match)
+
+
+# In[6]:
+
+
+def game(p1_symbol,p2_symbol):
+    again = False
+    end_match=False
+    board = ['#',' ',' ',' ',' ',' ',' ',' ',' ',' ']
+    lst=[]
+    tmpboard = board
+    
+    display_board(tmpboard)
+    end_match=False
+        
+    while end_match is False:
+            
+        lst, again, end_match = player_turn(lst,tmpboard,p1_symbol,'Player1')
+
+        if len(lst) == 9 and end_match == False:
+            clear_output()
+            display_board(tmpboard)
+            print('GAME OVER')
+            end_match=True
+            again=end()
+            display_board(tmpboard)
+            return again
+                
+        if end_match is True:
+            lst=[]
+            tmpboard = board
+            return again
+
+        lst, again, end_match = player_turn(lst,tmpboard,p2_symbol,'Player2')
+   
+
+
+# In[7]:
+
+
+from IPython.display import clear_output
+
+def Project():
+    #test
+    #p1_symbol='X'
+    #p2_symbol='O'
+    
+    p1_symbol, p2_symbol= choose_xo()
+
+    are_you_ready()
+    while game(p1_symbol,p2_symbol) is True:
+        game(p1_symbol,p2_symbol) 
+
+
+# In[ ]:
+
+
+Project()
+
+
+# In[ ]:
+
+
+
+
